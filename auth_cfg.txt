@@ -1,0 +1,4 @@
+[auth_cfg]
+ssh_username = admin
+ssh_password = cisco
+api_key = 1234567890

@@ -1,0 +1,7 @@
+#do not delete this line: Only one device/IP/DNS record per line
+192.168.0.221
+192.168.0.222
+192.168.0.223
+192.168.0.224
+192.168.0.225
+192.168.0.226

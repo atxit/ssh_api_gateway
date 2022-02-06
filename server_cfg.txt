@@ -1,0 +1,4 @@
+[server_cfg]
+https = False
+interface = 127.0.0.1
+port = 5000
