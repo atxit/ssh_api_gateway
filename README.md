@@ -10,7 +10,7 @@ The API SSH gateway is built using threading. Once SSH sessions are established,
 
 For simplicity, I’ve created a tool which parses YAML. An example of the YAML structure is found in the repo (named test.yaml). The fetch.py file is responsible for parsing the YAML file, creating the JSON, sending the API, receiving the results and writing the results to the output folder. 
 
-Folder contents
+<b>Folder contents</b>
 
 There are a number of files found in the root folder. These are:
 
@@ -24,26 +24,26 @@ There are a number of files found in the root folder. These are:
 •	remote_management.py: check status, start or stop the SSH service. <br>
 •	fetch.py: Used to initiate an API call using an YAML file<br>
 
-Python Libraries
+<b>Python Libraries</b>
 
 I have created this code using Python 3.9 and the following libraires
 
-•	Netmiko
-•	Flask
-•	ConfigParser
-•	argparse
-•	pprint
-•	json
-•	requests
-•	urllib3
-•	pyyaml (yaml)
+•	Netmiko<br>
+•	Flask<br>
+•	ConfigParser<br>
+•	argparse<br>
+•	pprint<br>
+•	json<br>
+•	requests<br>
+•	urllib3<br>
+•	pyyaml (yaml)<br>
 
 
-API Username and Password
+<b>API Username and Password</b>
 
 I have added a file called authentication_module.py which is imported during startup. This file contains a static username and password however, this could easily be integrated into LDAP (and should be) if used in a production network. 
 
-Server setup
+<b>Server setup</b>
 
 The server can be setup using three different methods:
 
@@ -74,7 +74,7 @@ python3 ssh_api.py -auth_cfg
 
 Server establishing SSH sessions
 
-SSH session 192.168.0.221 now established, now waiting for a job to arrive
+<i>SSH session 192.168.0.221 now established, now waiting for a job to arrive
 {'192.168.0.223': False, '192.168.0.221': True, '192.168.0.222': False}
 
 SSH session 192.168.0.222 now established, now waiting for a job to arrive
@@ -82,6 +82,7 @@ SSH session 192.168.0.222 now established, now waiting for a job to arrive
 
 SSH session 192.168.0.223 now established, now waiting for a job to arrive
 {'192.168.0.223': True, '192.168.0.221': True, '192.168.0.222': True}
+</i><br>
 
 True states that the SSH session is established, False is not established
 
@@ -89,42 +90,44 @@ From the console, there are four control options
 
 please select either start,status,stop or terminate:
 
-•	Start: this happens automatically during setup
-•	Stop: Graceful shutdown of all SSH sessions
-•	Terminate: Graceful shutdown of all SSH session then terminates the server
-•	Status: request SSH status
+•	Start: this happens automatically during setup<br>
+•	Stop: Graceful shutdown of all SSH sessions<br>
+•	Terminate: Graceful shutdown of all SSH session then terminates the server<br>
+•	Status: request SSH status<br>
 
 
 All actions (except terminate) are available when using remote_management.py
 
-python3 remote_management.py -status
-
+<i>
+python3 remote_management.py -status<br>
 {'response': {'192.168.0.221': False,
               '192.168.0.222': False,
               '192.168.0.223': False}}
 
 
-python3 remote_management.py -start
+python3 remote_management.py -start<br>
 {'response': {'192.168.0.221': True,
               '192.168.0.222': True,
               '192.168.0.223': True}}
 
 
-python3 remote_management.py -stop
+python3 remote_management.py -stop<br>
 {'response': {'192.168.0.221': False,
               '192.168.0.222': False,
               '192.168.0.223': False}}
+</i><br>
 
-Now that the server is up and the SSH sessions are established, it's time to pull some data. 
-
-python3 fetch.py test.yaml or python3 fetch.py test are acceptable. 
-
-ERROR 192.168.0.220: No SSH Threader found
-ERROR 192.168.0.224: No SSH Threader found
-
-Both 192.168.0.220 and .224 are configured in the YAML however, they are not online. 
+Now that the server is up and the SSH sessions are established, it's time to pull some data. <br><br>
+<i>
+python3 fetch.py test.yaml or python3 fetch.py test #either is acceptable.<br>
+ERROR 192.168.0.220: No SSH Threader found<br>
+ERROR 192.168.0.224: No SSH Threader found<br>
+</i>
+Both 192.168.0.220 and .224 are configured in the YAML however, neither are online. 
 
 <img src="results.png">
+
+
 
  
 
