@@ -74,49 +74,14 @@ def svr_cfg_import():
 
 
 def setup(args):
-    if len(args) > 0:
-        parser = argparse.ArgumentParser()
-        parser.add_argument('-auth_cfg', action='store_true', help='uses local cred file')
-        parser.add_argument('-svr_cfg', action='store_true', help='uses local server CFG file')
-        args = parser.parse_args(args)
-        auth_cfg = args.auth_cfg
-        svr_cfg = args.svr_cfg
-        if auth_cfg:
-            ssh_username, ssh_password, api_key = auth_cfg_import()
-        else:
-            parser.add_argument('-username', default=None, help='ssh username')
-            parser.add_argument('-password', default=None, help='ssh password')
-            parser.add_argument('-api_key', default=None, help='API Key, minimum 10 characters')
-            ssh_username = args.username
-            ssh_password = args.password
-            api_key = args.api_key
-        if svr_cfg:
-            https, interface, port = svr_cfg_import()
-        else:
-            parser.add_argument('-https', default=True, help='HTTPS, if False, HTTP is used')
-            parser.add_argument('-interface', default=False, help='default is Flask will determine')
-            parser.add_argument('-port', default=5000, help='default = 5000')
-            https = args.https
-            interface = args.interface
-            port = args.port
-        if ssh_username is None:
-            print('missing -username from auth_file.txt')
-            sys.exit()
-        if ssh_password is None:
-            print('missing -password from auth_file.txt')
-            sys.exit()
-        if api_key is None:
-            print('missing -api_key from auth_file.txt')
-            sys.exit()
-        else:
-            if len(api_key) < 10:
-                print('API Key, minimum 10 characters from auth_file.txt')
-                sys.exit()
-        if https:
-            print('server will use HTTPS')
-        else:
-            print('server will use HTTP')
-    else:
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-auth_cfg', action='store_true', help='uses local cred file')
+    parser.add_argument('-username', default=None, help='ssh username')
+    parser.add_argument('-password', default=None, help='ssh password')
+    parser.add_argument('-api_key', default=None, help='API Key, minimum 10 characters')
+    parser.add_argument('-wizard', action='store_true', help='enter setup wizard mode')
+    args = parser.parse_args(args)
+    if args.wizard:
         print('SETUP WIZARD')
         get_username = True
         while get_username:
@@ -131,7 +96,7 @@ def setup(args):
         get_api_key = True
         while get_api_key:
             api_key = input('Enter API key: ')
-            if len(api_key) > 2:
+            if len(api_key) > 9:
                 get_api_key = False
             else:
                 print('minimum API characters is 10')
@@ -148,6 +113,31 @@ def setup(args):
                 print('select either True or False')
         interface = input('Enter API interface (IP): ')
         port = input('Enter API Port Number (5000 is default): ')
+    else:
+        if args.auth_cfg:
+            ssh_username, ssh_password, api_key = auth_cfg_import()
+        else:
+            ssh_username = args.username
+            ssh_password = args.password
+            api_key = args.api_key
+        https, interface, port = svr_cfg_import()
+        if ssh_username is None:
+            print('missing -username')
+            sys.exit()
+        if ssh_password is None:
+            print('missing -password')
+            sys.exit()
+        if api_key is None:
+            print('missing -api_key')
+            sys.exit()
+        else:
+            if len(api_key) < 10:
+                print('API Key, minimum 10 characters')
+                sys.exit()
+        if https:
+            print('server will use HTTPS')
+        else:
+            print('server will use HTTP')
     return ssh_username, ssh_password, api_key, https, interface, port
 
 
@@ -220,7 +210,7 @@ if __name__ == '__main__':
     Thread(target=ssh.ssh_server).start()
     if https:
         try:
-            app.run(port=5000, host=interface, ssl_context=(CERT, KEY))
+            app.run(port=port, host=interface, ssl_context=(CERT, KEY))
         except Exception as e:
             print(e)
             sys.exit()

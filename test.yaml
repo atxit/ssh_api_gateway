@@ -1,0 +1,34 @@
+output folder: test
+192.168.0.220:
+- show running
+- show ip arp
+- show ip route
+- show version
+- show cdp neighbor
+- show lldp neighbor
+192.168.0.221:
+- show running
+- show ip arp
+- show ip route
+- show version
+- show cdp neighbor
+- show lldp neighbor
+192.168.0.222:
+- show running
+- show ip arp
+- show ip route
+- show version
+- show cdp neighbor
+- show lldp neighbor
+192.168.0.223:
+- show running
+- show ip arp
+- show ip route
+- show version
+- show cdp neighbor
+- show lldp neighbor
+192.168.0.224:
+- show running
+- show ip arp
+- show ip route
+- show version

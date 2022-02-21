@@ -1,0 +1,3 @@
+Protocol  Address          Age (min)  Hardware Addr   Type   Interface
+Internet  192.168.0.9             0   8c29.37f2.0756  ARPA   FastEthernet0/0
+Internet  192.168.0.222           -   ca02.1614.0000  ARPA   FastEthernet0/0

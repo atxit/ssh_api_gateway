@@ -199,8 +199,12 @@ class SSHThreader:
                         show_output: dict = {}
                         for command in self.job.get(device_id):
                             print(f'sending {command}')
-                            show_output.update({command: ssh_session.send_command(command, expect_string=rf'{prompt}',
+                            try:
+                                show_output.update({command: ssh_session.send_command(command,
+                                                                                  expect_string=rf'{prompt}',
                                                                                   cmd_verify=False)})
+                            except Exception:
+                                show_output.update({command: 'failed to send'})
                         print(f'{device_id} returning success')
                         with self.lock:
                             self.result_dict = {**self.result_dict, **{device_id: show_output}}
