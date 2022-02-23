@@ -3,5 +3,5 @@ Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
                   D - Remote, C - CVTA, M - Two-port Mac Relay 
 
 Device ID        Local Intrfce     Holdtme    Capability  Platform  Port ID
-R1.lab.local     Fas 0/0            153              R    7206VXR   Fas 0/0
-R2.lab.local     Fas 0/0            155              R    7206VXR   Fas 0/0
+R1.lab.local     Fas 0/0            144              R    7206VXR   Fas 0/0
+R2.lab.local     Fas 0/0            174              R    7206VXR   Fas 0/0

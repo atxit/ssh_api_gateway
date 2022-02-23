@@ -6,7 +6,7 @@ Compiled Sun 16-Oct-16 07:53 by prod_rel_team
 ROM: ROMMON Emulation Microcode
 BOOTLDR: 7200 Software (C7200-ADVIPSERVICESK9-M), Version 15.2(4)M11, RELEASE SOFTWARE (fc2)
 
-R3 uptime is 1 day, 2 hours, 32 minutes
+R1 uptime is 3 days, 1 hour, 55 minutes
 System returned to ROM by unknown reload cause - suspect boot_data[BOOT_COUNT] 0x0, BOOT_COUNT 0, BOOTDATA 19
 System image file is "tftp://255.255.255.255/unknown"
 Last reload reason: unknown reload cause - suspect boot_data[BOOT_COUNT] 0x0, BOOT_COUNT 0, BOOTDATA 19

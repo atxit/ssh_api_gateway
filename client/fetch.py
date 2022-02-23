@@ -34,12 +34,8 @@ def ssh_post(job):
                          headers={"Content-Type": "application/json"}).json()
 
 
-def write_results(results_dict, folder_path, local_dir):
-    if not os.path.isdir(str(Path(local_dir, folder_path))):
-        os.system(f'mkdir {str(Path(local_dir, folder_path))}')
-        save_dir = str(Path(local_dir, folder_path))
-    else:
-        save_dir = str(Path(local_dir, folder_path))
+def write_results(results_dict, folder_path):
+    save_dir = file_output_location(folder_path)
     for host_name, show_command_dict in results_dict.items():
         try:
             for command, show_command in show_command_dict.items():
@@ -75,10 +71,21 @@ def parse_args(arg):
         return yaml_file
 
 
+def file_output_location(file_path):
+    if re.search(r'^/', file_path):
+        if not os.path.isdir(file_path):
+            os.system(f'mkdir {file_path}')
+    else:
+        file_path = str(Path(local_dir, file_path))
+        if not os.path.isdir(file_path):
+            os.system(f'mkdir {file_path}')
+    return file_path
+
+
 if __name__ == '__main__':
     yaml_location = parse_args(sys.argv[1:])
     yaml_file = parse_yaml(yaml_location)
     folder_path = yaml_file.get('output folder')
     yaml_file.pop('output folder')
     results_dict = ssh_post(yaml_file)
-    write_results(results_dict, folder_path, local_dir)
+    write_results(results_dict, folder_path)

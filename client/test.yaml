@@ -1,4 +1,4 @@
-output folder: test
+output folder: /Users/ATX/test_test
 192.168.0.220:
 - show running
 - show ip arp

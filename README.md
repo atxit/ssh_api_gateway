@@ -1,4 +1,4 @@
-<strong><center> API SSH Gateway</center> </strong>
+<h1><strong><center> API SSH Gateway</center> </strong></h1>
 
 The API SSH gateway was primarily written to work with Cisco networking devices. As most networking devices don’t have API interfaces, access is mainly restricted to SSH or overly complex Netconf which uses YANG. 
 
@@ -10,46 +10,58 @@ The API SSH gateway is built using threading. Once SSH sessions are established,
 
 For simplicity, I’ve created a tool which parses YAML. An example of the YAML structure is found in the repo (named test.yaml). The fetch.py file is responsible for parsing the YAML file, creating the JSON, sending the API, receiving the results and writing the results to the output folder. 
 
-<b>Folder contents</b>
+<center><h3 style="color: green"> Folder Structure</h3></center>
 
-There are a number of files found in the root folder. These are:
+•	Code /<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; main.py: the front end python code (flask and args).<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; authentication_module.py: location of the API username and password. Could you expanded to use LDAP or some other authentication method.<br> 
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; ssh.py: location of the SSH (threaders) and queuing agent<br> 
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; remote_management.py: check status, start or stop the SSH service. <br>
+•	setup_cfg/<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; device_cfg.txt: a list of your SSH devices (either IP or Name)<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; auth_file.txt (optional): stores the SSH username, password and server API key (or use input arguments)<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; server_cfg.txt, server related configuration (http/https, API IP Address and port)<br>
+•	certs /<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; server.cert: cert for testing<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; server.key: key for testing<br>
 
-•	ssh_api.py: the front end python code (flask and args).<br>
-•	ssh.py:  backend processing of the API call (netmiko/threading).<br>
-•	authentication_module.py: location of the API username and password. Could you expanded to use LDAP or some other authentication method.<br> 
-•	device_cfg.txt: a list of your SSH devices (either IP or Name)<br>
-•	auth_file.txt (optional): stores the SSH username, password and server API key (or use input arguments)<br>
-•	server_cfg.txt, server related configuration (http/https, API IP Address and port)<br>
-•	cert/key for testing HTTPS<br>
-•	remote_management.py: check status, start or stop the SSH service. <br>
-•	fetch.py: Used to initiate an API call using an YAML file<br>
-
-<b>Python Libraries</b>
-
-I have created this code using Python 3.9 and the following libraires
-
-•	Netmiko<br>
-•	Flask<br>
-•	ConfigParser<br>
-•	argparse<br>
-•	pprint<br>
-•	json<br>
-•	requests<br>
-•	urllib3<br>
-•	pyyaml (yaml)<br>
+•	client/
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; fetch.py: Used to fetch the show commands, must include the YAML file name<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; exmample yaml file
 
 
-<b>API Username and Password</b>
+<center><h3 style="color: green"> Environment setup (Linux and Mac)</h3></center>
+
+Start by creating an new directory called projects (or any other name)
+
+mkdir projects<br>
+cd projects
+
+Then clone the git repository
+https://github.com/atxit/ssh_api_gateway.git
+
+Next, cd ssh_api_gateway and create a python venv
+
+python3 -m venv env<br> 
+source env/bin/activate<br> 
+pip3 install --upgrade pip<br> 
+pip3 install -r requirements.txt<br> 
+
+
+<center><b>API Username and Password</b></center>
 
 I have added a file called authentication_module.py which is imported during startup. This file contains a static username and password however, this could easily be integrated into LDAP (and should be) if used in a production network. 
 
-<b>Server setup</b>
+<b><center>Server setup</center></b>
 
 The server can be setup using three different methods:
 
 1)	Using the setup wizard. No information is saved
-2)	Using the server_cfg.txt file plus either auth_file.txt
+2)	Using the auth_file.txt and server_cfg.txt files
 3)	entered authentication arguments. 
+
+Note: configuration options found in the server_cfg.txt file can not be passed as arguments
+They must be provided using the wizard or directly from the file. 
 
 Arguments
 
@@ -60,42 +72,93 @@ Arguments
   -api_key API_KEY    	API Key, minimum 10 characters<br>
   -wizard             		enter setup wizard mode
 
-When -auth_cfg flag is entered, the auth_cfg.txt file is used. If neither the -wizard or -auth_cfg flag is flagged then -username, -password and -api_key must be provided.
+When -auth_cfg flag is entered, the auth_cfg.txt file is used.<br>
+If no flag is seen then the wizard starts.<br>
+or -auth_cfg flag is flagged then -username, -password and -api_key must be provided.
 
-Example using arguments:
+Example: Starting the server using arguments
+<i>python3 ssh_api.py -username admin -password cisco -api_key 5544332233444</i>
 
-python3 ssh_api.py -username admin -password cisco -api_key 5544332233444
+Example: Starting the server using the auth_file
+<i>python3 main.py -auth_cfg</i>
 
-Once the server starts, onscreen updates will be provided. 
+Example: Starting the server using the wizard
+<i>python3 main.py</i>
+<br>
+SETUP WIZARD<br>
+Enter SSH username: admin<br>
+Enter SSH password: <br>
+Enter API key: 5544332233444<br>
+Enable HTTPS? (True/False): True<br>
+Enter API interface (IP): 127.0.0.1<br>
+Enter API Port Number (5000 is default): <br>
+['192.168.0.221', '192.168.0.222', '192.168.0.223']<br>
+SSH API Gateway is up, check status to confirm SSH sessions<br>
+Threading Status<br>
 
-Example using auth_file.txt
+ * Serving Flask app 'main' (lazy loading)
 
-python3 ssh_api.py -auth_cfg
+please select either start,status,stop or terminate: 
+starting ssh session to 192.168.0.223
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on https://127.0.0.1:5000/ (Press CTRL+C to quit)
 
-Server establishing SSH sessions
+please select either start,status,stop or terminate: 
+SSH session 192.168.0.221 now established, now waiting for a job to arrive<br>
+{'192.168.0.221': True, '192.168.0.222': False, '192.168.0.223': False}
 
-<i>SSH session 192.168.0.221 now established, now waiting for a job to arrive
-{'192.168.0.223': False, '192.168.0.221': True, '192.168.0.222': False}
-
+please select either start,status,stop or terminate: <br>
 SSH session 192.168.0.222 now established, now waiting for a job to arrive
-{'192.168.0.223': False, '192.168.0.221': True, '192.168.0.222': True}
+{'192.168.0.221': True, '192.168.0.222': True, '192.168.0.223': False}
 
 SSH session 192.168.0.223 now established, now waiting for a job to arrive
-{'192.168.0.223': True, '192.168.0.221': True, '192.168.0.222': True}
-</i><br>
+{'192.168.0.221': True, '192.168.0.222': True, '192.168.0.223': True}
 
-True states that the SSH session is established, False is not established
+please select either start,status,stop or terminate: 
+
+As the server begins setting up SSH sessions, onscreen updates will be provided.
+True states that the SSH session has been established, False is an non-established SSH session.
 
 From the console, there are four control options
 
 please select either start,status,stop or terminate:
 
-•	Start: this happens automatically during setup<br>
-•	Stop: Graceful shutdown of all SSH sessions<br>
-•	Terminate: Graceful shutdown of all SSH session then terminates the server<br>
+•	<b>Start</b>: this happens automatically during setup<br><br>
+<i>please select either start,status,stop or terminate: start
+Threading Status
+{'192.168.0.221': False, '192.168.0.222': False, '192.168.0.223': False}
+starting ssh session to 192.168.0.222p
+lease select either start,status,stop or terminate: 
+starting ssh session to 192.168.0.223
+starting ssh session to 192.168.0.221
+</i>
+
+SSH session 192.168.0.221 now established, now waiting for a job to arrive<br>
+
+•	<b>Stop</b>: Graceful shutdown of all SSH sessions<br>
+•	<b>Terminate</b>: Graceful shutdown of all SSH session then terminates the server<br>
+<i><br>
+please select either start,status,stop or terminate: terminate<br>
+{'192.168.0.221': True, '192.168.0.222': True, '192.168.0.223': True}<br>
+graceful shutdown in progress, please wait<br>
+graceful shutdown in progress, please wait<br>
+graceful shutdown in progress, please wait<br>
+graceful shutdown in progress, please wait<br>
+graceful shutdown in progress, please wait<br>
+ssh disabled for 192.168.0.221<br>
+graceful shutdown in progress, please wait<br>
+ssh disabled for 192.168.0.222<br>
+<br>ssh disabled for 192.168.0.223
+graceful shutdown in progress, please wait<br>
+</i>
+
 •	Status: request SSH status<br>
-
-
+<i>
+please select either start,status,stop or terminate: status
+{'192.168.0.221': True, '192.168.0.222': True, '192.168.0.223': True}</i>
 All actions (except terminate) are available when using remote_management.py
 
 <i>
@@ -117,15 +180,29 @@ python3 remote_management.py -stop<br>
               '192.168.0.223': False}}
 </i><br>
 
-Now that the server is up and the SSH sessions are established, it's time to pull some data. <br><br>
+<h2><center>Fetching show commands</center></h2>
+Now that the server is up and working and our SSH sessions are established, it's time to pull some data. <br><br>
 <i>
+Before starting, configure the yaml file
+
+<img src=images/yaml_example.png>
+</i>
+
+Note, output folder is where the results are saved<br>
+if the path starts with a / then this is considered a full path
+if the path doesn't start with a /, example, test/file then current folder is used as the base dir
+
+
 python3 fetch.py test.yaml or python3 fetch.py test #either is acceptable.<br>
+
+Errors are displayed
+
 ERROR 192.168.0.220: No SSH Threader found<br>
 ERROR 192.168.0.224: No SSH Threader found<br>
 </i>
 Both 192.168.0.220 and .224 are configured in the YAML however, neither are online. 
 
-<img src="results.png">
+<img src="images/output%20results.png">
 
 
 

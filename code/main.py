@@ -22,16 +22,19 @@ except Exception:
 app = Flask(__name__)
 app.config.from_object(__name__)
 CONTENT = {'Content-Type': 'application/json'}
-CERT = str(Path(local_dir, 'server.cert'))
-KEY = str(Path(local_dir, 'server.key'))
+CERT = str(Path(local_dir, 'certs','server.cert'))
+KEY = str(Path(local_dir, 'certs', 'server.key'))
+AUTH_CFG_TXT = str(Path(local_dir, 'setup_cfg', 'auth_cfg.txt'))
+SERVER_CFG_TXT = str(Path(local_dir, 'setup_cfg', 'server_cfg.txt'))
 
 
 def auth_cfg_import():
-    if not os.path.isfile(str(Path(local_dir, 'auth_cfg.txt'))):
+    if not os.path.isfile(AUTH_CFG_TXT):
         print('auth_cfg.txt is missing')
         sys.exit()
+    print(AUTH_CFG_TXT)
     auth_config = ConfigParser()
-    auth_config.read(str(Path(local_dir, 'auth_cfg.txt')))
+    auth_config.read(AUTH_CFG_TXT)
     try:
         ssh_username = auth_config.get('auth_cfg', 'ssh_username')
     except Exception:
@@ -48,11 +51,12 @@ def auth_cfg_import():
 
 
 def svr_cfg_import():
-    if not os.path.isfile(str(Path(local_dir, 'server_cfg.txt'))):
+    if not os.path.isfile(SERVER_CFG_TXT):
         print('server_cfg.txt is missing')
         sys.exit()
+    print(SERVER_CFG_TXT)
     server_config = ConfigParser()
-    server_config.read(str(Path(local_dir, 'server_cfg.txt')))
+    server_config.read(SERVER_CFG_TXT)
     try:
         https = server_config.get('server_cfg', 'https')
         print(f'from file {type(https)}')
@@ -73,15 +77,15 @@ def svr_cfg_import():
     return https, interface, port
 
 
-def setup(args):
+def setup(input_args):
     parser = argparse.ArgumentParser()
     parser.add_argument('-auth_cfg', action='store_true', help='uses local cred file')
     parser.add_argument('-username', default=None, help='ssh username')
     parser.add_argument('-password', default=None, help='ssh password')
     parser.add_argument('-api_key', default=None, help='API Key, minimum 10 characters')
     parser.add_argument('-wizard', action='store_true', help='enter setup wizard mode')
-    args = parser.parse_args(args)
-    if args.wizard:
+    args = parser.parse_args(input_args)
+    if args.wizard or len(input_args) == 0:
         print('SETUP WIZARD')
         get_username = True
         while get_username:

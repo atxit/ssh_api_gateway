@@ -12,7 +12,7 @@ try:
 except Exception:
     local_dir = os.getcwd()
 
-DEVICE_FILE_PATH = str(Path(local_dir, 'device_cfg.txt'))
+DEVICE_FILE_PATH = str(Path(local_dir,'setup_cfg', 'device_cfg.txt'))
 
 
 def netmiko_attr(host, ssh_username, ssh_password, device_type='autodetect'):
