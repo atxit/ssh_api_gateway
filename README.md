@@ -15,7 +15,7 @@ For simplicity, I’ve created a tool which parses YAML. An example of the YAML 
 •	Code /<br>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; main.py: the front end python code (flask and args).<br>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; authentication_module.py: location of the API username and password. <br> 
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Could you expanded to use LDAP or some other authentication method.<br> 
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Could you expanded to use LDAP or some other authentication method.<br> 
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; ssh.py: location of the SSH (threaders) and queuing agent<br> 
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; remote_management.py: check status, start or stop the SSH service. <br>
 •	setup_cfg/<br>
